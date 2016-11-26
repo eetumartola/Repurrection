@@ -21,6 +21,7 @@ public class KittenController : MonoBehaviour
     public GameObject DownRaycastPos;
     public GameObject FrontRaycastPos;
     public GameObject KittenDeathEffect;
+    public GameObject KittenResurrectEffect;
     public GameObject DebugText;
 
     void Start ()
@@ -65,13 +66,7 @@ public class KittenController : MonoBehaviour
             stableFloorHeight = transform.position.y;
             if( lastStableFloorHeight - stableFloorHeight > deadlyFallHeight)
             {
-                Debug.Log("ARG I died!");
-                if(KittenDeathEffect != null)
-                {
-                    GameObject fx = Instantiate(KittenDeathEffect, transform.position, Quaternion.identity);
-                    Destroy(fx, 5.0f); 
-                }
-                Destroy(gameObject);
+                Kill();
             }
             lastStableFloorHeight = stableFloorHeight;
         }
@@ -86,7 +81,27 @@ public class KittenController : MonoBehaviour
         }
     }
 
-        void Update ()
+    public void Kill()
+    {
+        if (KittenDeathEffect != null)
+        {
+            GameObject fx = Instantiate(KittenDeathEffect, transform.position, KittenDeathEffect.transform.rotation);
+            Destroy(fx, 2.0f);
+        }
+        Destroy(gameObject);
+    }
+
+    public void Resurrect()
+    {
+        if (KittenResurrectEffect != null)
+        {
+            GameObject fx = Instantiate(KittenResurrectEffect, transform.position, KittenResurrectEffect.transform.rotation);
+            Destroy(fx, 4.0f);
+        }
+        Destroy(gameObject);
+    }
+
+    void Update ()
     {
 		
 	}
