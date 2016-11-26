@@ -12,9 +12,8 @@ public class KittenGoal : MonoBehaviour
 
     private void OnTriggerEnter(Collider collider)
     {
-        Debug.Log("Goal entered by " + collider.gameObject.name);
+       // Debug.Log("Goal entered by " + collider.gameObject.name);
         KittenController kc = collider.gameObject.GetComponentInParent<KittenController>();
         kc.Resurrect();
-        //mc.AddMiss();
     }
 }

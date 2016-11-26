@@ -24,6 +24,7 @@ public class KittenSpawner : MonoBehaviour
             KittenController newKittenController = newKitten.GetComponent<KittenController>();
             newKittenController.instanceNumber = instances;
             instances++;
+            GameManager.instance.AddSpawned();
             StartTime = Time.time;
         }
 	}

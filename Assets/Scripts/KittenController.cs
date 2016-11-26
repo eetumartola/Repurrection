@@ -94,6 +94,7 @@ public class KittenController : MonoBehaviour
             GameObject fx = Instantiate(KittenDeathEffect, transform.position, KittenDeathEffect.transform.rotation);
             Destroy(fx, 2.0f);
         }
+        GameManager.instance.AddDeath();
         Destroy(gameObject);
     }
 
@@ -104,6 +105,7 @@ public class KittenController : MonoBehaviour
             GameObject fx = Instantiate(KittenResurrectEffect, transform.position, KittenResurrectEffect.transform.rotation);
             Destroy(fx, 4.0f);
         }
+        GameManager.instance.AddResurrection();
         Destroy(gameObject);
     }
 
