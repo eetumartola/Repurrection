@@ -10,6 +10,7 @@ public class KittenController : MonoBehaviour
     private float obstacleDist = 10.0f;
     private TextMesh tm;
 
+    public int instanceNumber = 0;
     public float ForwardForce = 1.0f;
     public float ForceHeightLimit = 0.1f;
     public float ForwardVelocityLimit = 0.5f;
@@ -17,6 +18,7 @@ public class KittenController : MonoBehaviour
     public GameObject DownRaycastPos;
     public GameObject FrontRaycastPos;
     public GameObject DebugText;
+
 
     void Start ()
     {
@@ -49,10 +51,10 @@ public class KittenController : MonoBehaviour
         rayCastPos = FrontRaycastPos.transform.position;
         if (Physics.Raycast( rayCastPos, transform.forward, out forwardHitInfo ) )
         {
-            obstacleDist = Vector3.Magnitude( transform.position - forwardHitInfo.point );
+            obstacleDist = Vector3.Magnitude(FrontRaycastPos.transform.position - forwardHitInfo.point );
         }
 
-        tm.text = "height: " + height + "\n vel: " + rb.velocity + "\n dist: " + obstacleDist;
+        tm.text = "Kitty #" + instanceNumber + "\n height: " + height + "\n vel: " + rb.velocity + "\n dist: " + obstacleDist;
 
         if ( height < ForceHeightLimit )
         {
