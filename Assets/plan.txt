@@ -1,0 +1,26 @@
+Purrgatory!
+
+kitten movement (eetu)
+- fall
+- death
+- restricting to 2d
+- colliders
+- handle changing colliders
+- climb
+- jump
+- animations (state machine)
+- path finding?
+
+game (jonathan)
+- getting colliders to game (visible for debug)
+- getting example collider models to pc unity (for development)
+- hololens gesture stuff
+- interactions
+- dropping the target/goal/resurrection
+- different levels / randomization / progression
+- scoring
+- tutorial
+- positional audio (stretch goal)
+
+
+Plan B, pivot to chicken eggs! eggs can't fall without breaking!
