@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class KittenController : MonoBehaviour
 {
-    private int direction = 1; // can be -1 or 1, depending on whether the kitten is moving along positive or negative X axis
+    //private int direction = 1; // can be -1 or 1, depending on whether the kitten is moving along positive or negative X axis
     private Rigidbody rb;
     private float height = 1.0f;
     private float obstacleDist = 10.0f;
@@ -23,14 +23,16 @@ public class KittenController : MonoBehaviour
     public GameObject KittenDeathEffect;
     public GameObject KittenResurrectEffect;
     public GameObject DebugText;
+    public bool showDebugText = false;
 
     void Start ()
     {
         rb = GetComponent<Rigidbody>();
         if (rb == null) Debug.LogWarning("No Rigidbody component in " + gameObject.name);
 
-        if (DebugText != null)
+        if ( showDebugText && DebugText != null)
         {
+            DebugText.SetActive(true);
             tm = DebugText.GetComponent<TextMesh>();
             if (tm == null) Debug.LogWarning("No Textmesh Component in" + DebugText.name);
         }
@@ -58,7 +60,10 @@ public class KittenController : MonoBehaviour
             obstacleDist = Vector3.Magnitude(FrontRaycastPos.transform.position - forwardHitInfo.point );
         }
 
-        tm.text = "Kitty #" + instanceNumber + "\n height: " + height + "\n dist: " + obstacleDist;
+        if (showDebugText)
+        {
+            tm.text = "Kitty #" + instanceNumber + "\n height: " + height + "\n dist: " + obstacleDist;
+        }
 
         if ( height < ForceHeightLimit )
         {
@@ -79,6 +84,7 @@ public class KittenController : MonoBehaviour
         {
             transform.localEulerAngles += new Vector3( 0.0f, 180f, 0.0f );
         }
+        if (transform.position.y < -20.0f) Kill();
     }
 
     public void Kill()
