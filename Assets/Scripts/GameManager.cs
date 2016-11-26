@@ -26,6 +26,7 @@ public class GameManager : MonoBehaviour
     private float idleTimerReset = 0.0f;
     private float gameOverCounter = 0.0f;
     private GameObject GameOverInstance;
+    private GameObject scoreInstance;
     private bool positionClicked = false;
     private KittenGoal kittenGoal;
 
@@ -33,6 +34,7 @@ public class GameManager : MonoBehaviour
 
     public int kittensToSpawn = 25;
     public float percetageToResurrect = 0.5f;
+    public GameObject GateTextObj;
     public GameObject SpawnerObj;
     public GameObject ScoreTextObj;
     public GameObject GameOverObj;
@@ -60,7 +62,6 @@ public class GameManager : MonoBehaviour
         gameState = GameState.Positioning;
         //gameState = GameState.Running;
         idleTimerReset = Time.time;
-        StartLevel();
     }
 
     void StartLevel()
@@ -76,11 +77,18 @@ public class GameManager : MonoBehaviour
         }
         else Debug.LogError("No Kitten Spawner defined in GameManager!!");
 
-        if (ScoreTextObj != null) scoreText = ScoreTextObj.GetComponent<TextMesh>();
-        else  Debug.LogError("No Score Text Object defined in GameManager!!");
+        if (ScoreTextObj != null)
+        {
+            scoreInstance = Instantiate(ScoreTextObj);
+            scoreText = scoreInstance.GetComponent<TextMesh>();
+            scoreInstance.transform.position = GoalObj.transform.position + new Vector3( 0.0f, 1.0f, 0.0f );
+        }
+        else Debug.LogError("No Score Text Object defined in GameManager!!");
 
         if (GoalObj != null) kittenGoal = GoalObj.GetComponent<KittenGoal>();
         else Debug.LogError("No Goal Object defined in GameManager!!");
+
+        GateTextObj.SetActive(false);
 
     }
 
@@ -123,7 +131,7 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            gameOverMessage = "Not enough Kittens Resurrected!\nYou only saved " + kittensResurrected + " out of " + kittensToSpawn;
+            gameOverMessage = "GAME OVER\nNot enough Kittens Resurrected!\nYou only saved " + kittensResurrected + " out of " + kittensToSpawn;
         }
         Debug.Log(gameOverMessage);
         if (GameOverObj != null)
@@ -144,6 +152,7 @@ public class GameManager : MonoBehaviour
         else if (positionClicked)
         {
             gameState = GameState.Running;
+            StartLevel();
             positionClicked = false;
         }
         debugIdleTime = Time.time - idleTimerReset;
