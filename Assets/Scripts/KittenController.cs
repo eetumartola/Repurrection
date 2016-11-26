@@ -9,16 +9,19 @@ public class KittenController : MonoBehaviour
     private float height = 1.0f;
     private float obstacleDist = 10.0f;
     private TextMesh tm;
+    private float lastStableFloorHeight = 0.0f;
+    private float stableFloorHeight = 0.0f;
 
     public int instanceNumber = 0;
     public float ForwardForce = 1.0f;
     public float ForceHeightLimit = 0.1f;
     public float ForwardVelocityLimit = 0.5f;
     public float ObstacleCollDistLimit = 0.02f;
+    public float deadlyFallHeight = 0.5f;
     public GameObject DownRaycastPos;
     public GameObject FrontRaycastPos;
+    public GameObject KittenDeathEffect;
     public GameObject DebugText;
-
 
     void Start ()
     {
@@ -54,11 +57,23 @@ public class KittenController : MonoBehaviour
             obstacleDist = Vector3.Magnitude(FrontRaycastPos.transform.position - forwardHitInfo.point );
         }
 
-        tm.text = "Kitty #" + instanceNumber + "\n height: " + height + "\n vel: " + rb.velocity + "\n dist: " + obstacleDist;
+        tm.text = "Kitty #" + instanceNumber + "\n height: " + height + "\n dist: " + obstacleDist;
 
         if ( height < ForceHeightLimit )
         {
             rb.AddRelativeForce(ForwardForce * Vector3.forward);
+            stableFloorHeight = transform.position.y;
+            if( lastStableFloorHeight - stableFloorHeight > deadlyFallHeight)
+            {
+                Debug.Log("ARG I died!");
+                if(KittenDeathEffect != null)
+                {
+                    GameObject fx = Instantiate(KittenDeathEffect, transform.position, Quaternion.identity);
+                    Destroy(fx, 5.0f); 
+                }
+                Destroy(gameObject);
+            }
+            lastStableFloorHeight = stableFloorHeight;
         }
         if( Mathf.Abs(rb.velocity.x) > ForwardVelocityLimit )
         {
