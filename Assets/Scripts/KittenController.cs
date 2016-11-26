@@ -36,7 +36,7 @@ public class KittenController : MonoBehaviour
             tm = DebugText.GetComponent<TextMesh>();
             if (tm == null) Debug.LogWarning("No Textmesh Component in" + DebugText.name);
         }
-
+        lastStableFloorHeight = transform.position.y;
         rb.centerOfMass = new Vector3(0.0f, 0.05f, 0.0f);
 	}
 
@@ -70,7 +70,7 @@ public class KittenController : MonoBehaviour
             tm.text = "Kitty #" + instanceNumber + "\n height: " + height + "\n dist: " + obstacleDist;
         }
 
-        if ( height < ForceHeightLimit )
+        if ( height < ForceHeightLimit || rb.velocity.y < 0.1f )
         {
             rb.AddRelativeForce(ForwardForce * (Vector3.forward + 0.1f * Vector3.up));
             stableFloorHeight = transform.position.y;
@@ -84,6 +84,7 @@ public class KittenController : MonoBehaviour
         {
             rb.AddRelativeForce(ForwardForce * 0.1f * (Vector3.forward + 0.1f * Vector3.up));
         }
+
         if ( Mathf.Abs(rb.velocity.x) > ForwardVelocityLimit )
         {
             rb.velocity = new Vector3(ForwardVelocityLimit * Mathf.Sign( rb.velocity.x), rb.velocity.y, 0.0f );
