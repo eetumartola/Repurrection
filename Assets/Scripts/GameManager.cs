@@ -5,6 +5,7 @@ using UnityEngine;
 public enum GameState
 {
     StartMenu,
+    Positioning,
     Running,
     Running_Spawning,
     Running_SpawnOver,
@@ -20,8 +21,13 @@ public class GameManager : MonoBehaviour
     private int kittensSpawned = 0;
     private KittenSpawner spawner;
     private TextMesh scoreText;
-    private float idleTimeLimit = 30.0f;
+    private float idleTimeLimit = 10.0f;
     private float idleTimerReset = 0.0f;
+    private float gameOverCounter = 0.0f;
+    private GameObject GameOverInstance;
+    private bool positionClicked = false;
+    private KittenGoal kittenGoal;
+
     public GameState gameState = GameState.StartMenu;
 
     public int kittensToSpawn = 25;
@@ -29,6 +35,7 @@ public class GameManager : MonoBehaviour
     public GameObject SpawnerObj;
     public GameObject ScoreTextObj;
     public GameObject GameOverObj;
+    public GameObject GoalObj;
 
     public float debugIdleTime = 0.0f;
 
@@ -49,7 +56,9 @@ public class GameManager : MonoBehaviour
     {
         gameState = GameState.StartMenu;
         //....
-        gameState = GameState.Running;
+        gameState = GameState.Positioning;
+        //gameState = GameState.Running;
+        idleTimerReset = Time.time;
         StartLevel();
     }
 
@@ -60,17 +69,21 @@ public class GameManager : MonoBehaviour
             spawner = SpawnerObj.GetComponent<KittenSpawner>();
             spawner.MaxSpawns = kittensToSpawn;
         }
-        else
+        else Debug.LogError("No Kitten Spawner defined in GameManager!!");
+
+        if (ScoreTextObj != null) scoreText = ScoreTextObj.GetComponent<TextMesh>();
+        else  Debug.LogError("No Score Text Object defined in GameManager!!");
+
+        if (GoalObj != null) kittenGoal = GoalObj.GetComponent<KittenGoal>();
+        else Debug.LogError("No Goal Object defined in GameManager!!");
+
+    }
+
+    void OnClick()
+    {
+        if (gameState == GameState.Positioning)
         {
-            Debug.LogError("No Kitten Spawner defined in GameManager!!");
-        }
-        if (ScoreTextObj != null)
-        {
-            scoreText = ScoreTextObj.GetComponent<TextMesh>();
-        }
-        else
-        {
-            Debug.LogError("No Score Text Object defined in GameManager!!");
+            positionClicked = true;
         }
     }
 
@@ -89,14 +102,14 @@ public class GameManager : MonoBehaviour
 
     public void AddSpawned()
     {
-        kittensDied++;
+        kittensSpawned++;
         idleTimerReset = Time.time;
     }
 
     void GameOver()
     {
         gameState = GameState.GameOver;
-
+        gameOverCounter = Time.time;
         float percetageResurrected = (float)kittensResurrected / (float)kittensToSpawn;
         string gameOverMessage = "" ;
         if (percetageResurrected >= percetageToResurrect)
@@ -110,22 +123,59 @@ public class GameManager : MonoBehaviour
         Debug.Log(gameOverMessage);
         if (GameOverObj != null)
         {
-            GameObject GOGO = Instantiate(GameOverObj);
-            TextMesh gameoverText = GOGO.GetComponent<TextMesh>();
+            GameOverInstance = Instantiate(GameOverObj);
+            TextMesh gameoverText = GameOverInstance.GetComponent<TextMesh>();
             gameoverText.text = gameOverMessage;
         }
     }
 
     void Update ()
     {
+        if (gameState == GameState.Positioning && !positionClicked )
+        {
+            kittenGoal.Position();
+        }
+        else if (positionClicked)
+        {
+            gameState = GameState.Running;
+            positionClicked = false;
+        }
         debugIdleTime = Time.time - idleTimerReset;
-		if ( gameState == GameState.Running && Time.time - idleTimerReset > idleTimeLimit)
+		if ( gameState == GameState.Running && debugIdleTime > idleTimeLimit)
         {
+            Debug.Log("gameover 1");
             GameOver();
         }
-        if( gameState == GameState.Running && kittensResurrected + kittensDied >= kittensToSpawn )
+        if (gameState == GameState.Running && kittensResurrected + kittensDied >= kittensToSpawn)
         {
+            Debug.Log("gameover 2 " + kittensResurrected + " " + kittensDied);
             GameOver();
         }
-	}
+        if (gameState == GameState.GameOver && Time.time - gameOverCounter > 5.0f)
+        {
+            Reset();
+        }
+
+    }
+
+    private void KillAllKittens()
+    {
+        GameObject[] allKittens = GameObject.FindGameObjectsWithTag("Kitten");
+        foreach (GameObject kitten in allKittens)
+        {
+            Destroy(kitten);
+        }
+    }
+
+    private void Reset()
+    {
+        gameState = GameState.Running;
+        Destroy(GameOverInstance);
+        kittensResurrected = 0;
+        kittensDied = 0;
+        kittensSpawned = 0;
+        KillAllKittens();
+        spawner.Restart();
+        idleTimerReset = Time.time;
+    }
 }

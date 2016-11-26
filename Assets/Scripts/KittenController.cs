@@ -37,7 +37,7 @@ public class KittenController : MonoBehaviour
             if (tm == null) Debug.LogWarning("No Textmesh Component in" + DebugText.name);
         }
 
-        rb.centerOfMass = Vector3.zero;
+        rb.centerOfMass = new Vector3(0.0f, 0.05f, 0.0f);
 	}
 
     private void FixedUpdate()
@@ -51,13 +51,18 @@ public class KittenController : MonoBehaviour
         {
             height = Vector3.Magnitude( transform.position - downHitInfo.point );
         }
+        if (obstacleDist < ObstacleCollDistLimit)
+        {
+            transform.localEulerAngles += new Vector3(0.0f, 180f, 0.0f);
+        }
 
         //Raycast Forwards to get kitten distance from obstacle
         RaycastHit forwardHitInfo;
-        rayCastPos = FrontRaycastPos.transform.position;
-        if (Physics.Raycast( rayCastPos, transform.forward, out forwardHitInfo ) )
+        rayCastPos = FrontRaycastPos.transform.position; 
+        //if (Physics.Raycast(rayCastPos, transform.forward, out forwardHitInfo))
+        if (Physics.Raycast(rayCastPos, Mathf.Sign(rb.velocity.x) * Vector3.right, out forwardHitInfo))
         {
-            obstacleDist = Vector3.Magnitude(FrontRaycastPos.transform.position - forwardHitInfo.point );
+                obstacleDist = Vector3.Magnitude(FrontRaycastPos.transform.position - forwardHitInfo.point );
         }
 
         if (showDebugText)
@@ -67,7 +72,7 @@ public class KittenController : MonoBehaviour
 
         if ( height < ForceHeightLimit )
         {
-            rb.AddRelativeForce(ForwardForce * Vector3.forward);
+            rb.AddRelativeForce(ForwardForce * (Vector3.forward + 0.1f * Vector3.up));
             stableFloorHeight = transform.position.y;
             if( lastStableFloorHeight - stableFloorHeight > deadlyFallHeight)
             {
@@ -75,15 +80,15 @@ public class KittenController : MonoBehaviour
             }
             lastStableFloorHeight = stableFloorHeight;
         }
-        if( Mathf.Abs(rb.velocity.x) > ForwardVelocityLimit )
+        else
+        {
+            rb.AddRelativeForce(ForwardForce * 0.1f * (Vector3.forward + 0.1f * Vector3.up));
+        }
+        if ( Mathf.Abs(rb.velocity.x) > ForwardVelocityLimit )
         {
             rb.velocity = new Vector3(ForwardVelocityLimit * Mathf.Sign( rb.velocity.x), rb.velocity.y, 0.0f );
         }
 
-        if ( obstacleDist < ObstacleCollDistLimit )
-        {
-            transform.localEulerAngles += new Vector3( 0.0f, 180f, 0.0f );
-        }
         if (transform.position.y < -20.0f) Kill();
     }
 

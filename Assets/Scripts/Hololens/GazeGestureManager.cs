@@ -25,6 +25,7 @@ public class GazeGestureManager : MonoBehaviour
                 Debug.Log("Tapped! " + FocusedObject.name);
                 FocusedObject.SendMessageUpwards("OnSelect");
             }
+            GameManager.instance.SendMessage("OnClick");
         };
         recognizer.StartCapturingGestures();
     }

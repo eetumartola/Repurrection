@@ -11,12 +11,18 @@ public class KittenSpawner : MonoBehaviour
     private float StartTime;
     private int instances = 0;
 
-	void Start ()
+    void Start()
     {
-		StartTime = Time.time;
-	}
-	
-	void Update ()
+        StartTime = Time.time;
+    }
+
+    public void Restart()
+    {
+        StartTime = Time.time;
+        instances = 0;
+    }
+
+    void Update ()
     {
 		if( Time.time - StartTime > SpawnInterval && instances < MaxSpawns )
         {
