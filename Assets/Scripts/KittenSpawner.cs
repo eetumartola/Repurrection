@@ -26,7 +26,7 @@ public class KittenSpawner : MonoBehaviour
     {
 		if( Time.time - StartTime > SpawnInterval && instances < MaxSpawns )
         {
-            GameObject newKitten = Instantiate(KittenPrefab, transform, true);
+            GameObject newKitten = Instantiate(KittenPrefab, transform.position, Quaternion.Euler(0.0f, -90.0f, 0.0f));
             KittenController newKittenController = newKitten.GetComponent<KittenController>();
             newKittenController.instanceNumber = instances;
             instances++;

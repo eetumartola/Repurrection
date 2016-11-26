@@ -14,7 +14,6 @@ public class GazeGestureManager : MonoBehaviour
     void Start()
     {
         Instance = this;
-        Debug.Log("GazeManager Started");
         // Set up a GestureRecognizer to detect Select gestures.
         recognizer = new GestureRecognizer();
         recognizer.TappedEvent += (source, tapCount, ray) =>

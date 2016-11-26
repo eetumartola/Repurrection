@@ -9,7 +9,7 @@ public class KittenGoal : MonoBehaviour
 		
 	}
 
-    public void Position()
+    public Vector3 Position()
     {
         var headPosition = Camera.main.transform.position;
         var gazeDirection = Camera.main.transform.forward;
@@ -27,8 +27,7 @@ public class KittenGoal : MonoBehaviour
             // If the raycast did not hit a hologram, clear the focused object.
             transform.position = dropPosition;
         }
-
-
+        return transform.position;
     }
 
 

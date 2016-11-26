@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour
     private int kittensResurrected = 0;
     private int kittensDied = 0;
     private int kittensSpawned = 0;
+    private GameObject spawnerInstance;
     private KittenSpawner spawner;
     private TextMesh scoreText;
     private float idleTimeLimit = 10.0f;
@@ -36,7 +37,7 @@ public class GameManager : MonoBehaviour
     public GameObject ScoreTextObj;
     public GameObject GameOverObj;
     public GameObject GoalObj;
-
+    public Vector3 SpawnOffset = new Vector3( 1.5f, 1.5f, 0.0f );
     public float debugIdleTime = 0.0f;
 
     private void Awake()
@@ -66,7 +67,11 @@ public class GameManager : MonoBehaviour
     {
         if (SpawnerObj != null)
         {
-            spawner = SpawnerObj.GetComponent<KittenSpawner>();
+            spawnerInstance = Instantiate( SpawnerObj );
+        }
+        if (spawnerInstance != null)
+        {
+            spawner = spawnerInstance.GetComponent<KittenSpawner>();
             spawner.MaxSpawns = kittensToSpawn;
         }
         else Debug.LogError("No Kitten Spawner defined in GameManager!!");
@@ -133,7 +138,8 @@ public class GameManager : MonoBehaviour
     {
         if (gameState == GameState.Positioning && !positionClicked )
         {
-            kittenGoal.Position();
+            Vector3 pos = kittenGoal.Position();
+            spawnerInstance.transform.position = pos + SpawnOffset;
         }
         else if (positionClicked)
         {
