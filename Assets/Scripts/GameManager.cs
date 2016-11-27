@@ -127,13 +127,13 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            gameOverMessage = "GAME OVER\nNot enough Kittens Resurrected!\nYou only saved " + kittensResurrected + " out of " + kittensToSpawn;
+            gameOverMessage = "Not enough Kittens Resurrected!\nYou only saved " + kittensResurrected + " out of " + kittensToSpawn;
         }
         Debug.Log(gameOverMessage);
         if (GameOverObj != null)
         {
             GameOverInstance = Instantiate(GameOverObj);
-            GameOverInstance.transform.position = GoalObj.transform.position + new Vector3(1.5f, 1.5f, 0.0f);
+            GameOverInstance.transform.position = GoalObj.transform.position + new Vector3(1.5f, 1.2f, 0.0f);
             TextMesh gameoverText = GameOverInstance.GetComponent<TextMesh>();
             gameoverText.text = gameOverMessage;
         }
@@ -154,6 +154,7 @@ public class GameManager : MonoBehaviour
             StartLevel();
             positionClicked = false;
             spawner.positioned = true;
+            idleTimerReset = Time.time;
         }
         debugIdleTime = Time.time - idleTimerReset;
 		if ( gameState == GameState.Running && debugIdleTime > idleTimeLimit)
