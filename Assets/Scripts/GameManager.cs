@@ -60,15 +60,11 @@ public class GameManager : MonoBehaviour
         gameState = GameState.StartMenu;
         //....
         gameState = GameState.Positioning;
-        //gameState = GameState.Running;
-        idleTimerReset = Time.time;
-    }
-
-    void StartLevel()
-    {
+        if (GoalObj != null) kittenGoal = GoalObj.GetComponent<KittenGoal>();
+        else Debug.LogError("No Goal Object defined in GameManager!!");
         if (SpawnerObj != null)
         {
-            spawnerInstance = Instantiate( SpawnerObj );
+            spawnerInstance = Instantiate(SpawnerObj);
         }
         if (spawnerInstance != null)
         {
@@ -76,7 +72,11 @@ public class GameManager : MonoBehaviour
             spawner.MaxSpawns = kittensToSpawn;
         }
         else Debug.LogError("No Kitten Spawner defined in GameManager!!");
+        idleTimerReset = Time.time;
+    }
 
+    void StartLevel()
+    {
         if (ScoreTextObj != null)
         {
             scoreInstance = Instantiate(ScoreTextObj);
@@ -85,11 +85,7 @@ public class GameManager : MonoBehaviour
         }
         else Debug.LogError("No Score Text Object defined in GameManager!!");
 
-        if (GoalObj != null) kittenGoal = GoalObj.GetComponent<KittenGoal>();
-        else Debug.LogError("No Goal Object defined in GameManager!!");
-
         GateTextObj.SetActive(false);
-
     }
 
     void OnClick()
@@ -137,6 +133,7 @@ public class GameManager : MonoBehaviour
         if (GameOverObj != null)
         {
             GameOverInstance = Instantiate(GameOverObj);
+            GameOverInstance.transform.position = GoalObj.transform.position + new Vector3(1.5f, 1.5f, 0.0f);
             TextMesh gameoverText = GameOverInstance.GetComponent<TextMesh>();
             gameoverText.text = gameOverMessage;
         }
@@ -148,12 +145,15 @@ public class GameManager : MonoBehaviour
         {
             Vector3 pos = kittenGoal.Position();
             spawnerInstance.transform.position = pos + SpawnOffset;
+            GateTextObj.transform.LookAt(Camera.main.transform);
+            //GateTextObj.transform.Rotate(new Vector3(0,180,0)); //180 needed for textmesh
         }
         else if (positionClicked)
         {
             gameState = GameState.Running;
             StartLevel();
             positionClicked = false;
+            spawner.positioned = true;
         }
         debugIdleTime = Time.time - idleTimerReset;
 		if ( gameState == GameState.Running && debugIdleTime > idleTimeLimit)

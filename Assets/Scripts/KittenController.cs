@@ -36,7 +36,9 @@ public class KittenController : MonoBehaviour
             tm = DebugText.GetComponent<TextMesh>();
             if (tm == null) Debug.LogWarning("No Textmesh Component in" + DebugText.name);
         }
+
         lastStableFloorHeight = transform.position.y;
+
         rb.centerOfMass = new Vector3(0.0f, 0.05f, 0.0f);
 	}
 
@@ -70,7 +72,7 @@ public class KittenController : MonoBehaviour
             tm.text = "Kitty #" + instanceNumber + "\n height: " + height + "\n dist: " + obstacleDist;
         }
 
-        if ( height < ForceHeightLimit || rb.velocity.y < 0.1f )
+        if ( height < ForceHeightLimit || Mathf.Abs(rb.velocity.y) < 0.1f )
         {
             rb.AddRelativeForce(ForwardForce * (Vector3.forward + 0.1f * Vector3.up));
             stableFloorHeight = transform.position.y;
@@ -109,6 +111,8 @@ public class KittenController : MonoBehaviour
         if (KittenResurrectEffect != null)
         {
             GameObject fx = Instantiate(KittenResurrectEffect, transform.position, KittenResurrectEffect.transform.rotation);
+            fx.transform.LookAt(Camera.main.transform);
+            fx.transform.Rotate(new Vector3(0, 180, 0));
             Destroy(fx, 4.0f);
         }
         GameManager.instance.AddResurrection();

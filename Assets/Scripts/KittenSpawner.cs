@@ -7,6 +7,7 @@ public class KittenSpawner : MonoBehaviour
     public GameObject KittenPrefab;
     public float SpawnInterval = 2.0f;
     public int MaxSpawns = 25;
+    public bool positioned = false;
 
     private float StartTime;
     private int instances = 0;
@@ -24,7 +25,7 @@ public class KittenSpawner : MonoBehaviour
 
     void Update ()
     {
-		if( Time.time - StartTime > SpawnInterval && instances < MaxSpawns )
+		if( Time.time - StartTime > SpawnInterval && instances < MaxSpawns && positioned)
         {
             GameObject newKitten = Instantiate(KittenPrefab, transform.position, Quaternion.Euler(0.0f, -90.0f, 0.0f));
             KittenController newKittenController = newKitten.GetComponent<KittenController>();
