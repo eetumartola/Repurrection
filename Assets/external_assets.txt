@@ -1,5 +1,8 @@
 Kitten asset:
-Unity asset store, url
+Unity asset store, https://www.assetstore.unity3d.com/en/#!/content/33121
 
 Spatial mapping:
-Microsoft exmaples, url 
+Microsoft hololens example prefabs, https://developer.microsoft.com/en-us/windows/holographic/academy
+
+Audio:
+hallelujah & cat's meow, www.freesound.org
