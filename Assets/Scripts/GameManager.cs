@@ -22,6 +22,7 @@ public class GameManager : MonoBehaviour
     private GameObject spawnerInstance;
     private KittenSpawner spawner;
     private TextMesh scoreText;
+    private HoloToolkit.Unity.SpatialMappingManager spatialMapper;
     private float idleTimeLimit = 10.0f;
     private float idleTimerReset = 0.0f;
     private float gameOverCounter = 0.0f;
@@ -39,6 +40,7 @@ public class GameManager : MonoBehaviour
     public GameObject ScoreTextObj;
     public GameObject GameOverObj;
     public GameObject GoalObj;
+    public GameObject SpatialMapperObj;
     public Vector3 SpawnOffset = new Vector3( 1.5f, 1.5f, 0.0f );
     public float debugIdleTime = 0.0f;
 
@@ -60,6 +62,8 @@ public class GameManager : MonoBehaviour
         gameState = GameState.StartMenu;
         //....
         gameState = GameState.Positioning;
+        if (SpatialMapperObj != null) spatialMapper = SpatialMapperObj.GetComponent<HoloToolkit.Unity.SpatialMappingManager>();
+        else Debug.LogError("No Spatial Mapper Object defined in GameManager!!");
         if (GoalObj != null) kittenGoal = GoalObj.GetComponent<KittenGoal>();
         else Debug.LogError("No Goal Object defined in GameManager!!");
         if (SpawnerObj != null)
@@ -155,6 +159,7 @@ public class GameManager : MonoBehaviour
             positionClicked = false;
             spawner.positioned = true;
             idleTimerReset = Time.time;
+            spatialMapper.DrawVisualMeshes = false;
         }
         debugIdleTime = Time.time - idleTimerReset;
 		if ( gameState == GameState.Running && debugIdleTime > idleTimeLimit)
