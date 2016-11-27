@@ -169,7 +169,8 @@ public class GameManager : MonoBehaviour
         if (GameOverObj != null)
         {
             GameOverInstance = Instantiate(GameOverObj);
-            GameOverInstance.transform.position = GoalObj.transform.position + new Vector3(1.5f, 1.2f, 0.0f);
+            //GameOverInstance.transform.position = GoalObj.transform.position + new Vector3(1.5f, 1.2f, 0.0f);
+            GameOverInstance.transform.position = Camera.main.transform.position + 2.0f * Camera.main.transform.forward;
             TextMesh gameoverText = GameOverInstance.GetComponent<TextMesh>();
             gameoverText.text = gameOverMessage;
         }
