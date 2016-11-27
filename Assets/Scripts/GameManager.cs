@@ -35,6 +35,7 @@ public class GameManager : MonoBehaviour
 
     public int kittensToSpawn = 25;
     public float percetageToResurrect = 0.5f;
+    public GameObject StartSceneObj;
     public GameObject GateTextObj;
     public GameObject SpawnerObj;
     public GameObject ScoreTextObj;
@@ -79,7 +80,12 @@ public class GameManager : MonoBehaviour
         idleTimerReset = Time.time;
     }
 
-    void StartLevel()
+    void StartPositioning()
+    {
+
+    }
+
+        void StartLevel()
     {
         if (ScoreTextObj != null)
         {
