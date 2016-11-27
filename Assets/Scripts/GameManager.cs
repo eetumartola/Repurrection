@@ -159,7 +159,7 @@ public class GameManager : MonoBehaviour
             positionClicked = false;
             spawner.positioned = true;
             idleTimerReset = Time.time;
-            spatialMapper.DrawVisualMeshes = false;
+            //spatialMapper.DrawVisualMeshes = false;
         }
         debugIdleTime = Time.time - idleTimerReset;
 		if ( gameState == GameState.Running && debugIdleTime > idleTimeLimit)
